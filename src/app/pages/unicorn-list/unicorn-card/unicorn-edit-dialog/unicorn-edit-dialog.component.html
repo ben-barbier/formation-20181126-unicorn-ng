@@ -1,0 +1,38 @@
+<h1 mat-dialog-title>Unicorn : {{unicorn.id}}</h1>
+<form (ngSubmit)="updateUnicorn()" #unicornForm="ngForm">
+    <div mat-dialog-content>
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Name</mat-label>
+                <input matInput
+                       name="name"
+                       [(ngModel)]="unicorn.name"
+                       placeholder="What's your name ?"
+                       required>
+                <mat-icon matSuffix>account_box</mat-icon>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field appearance="outline">
+                <mat-label>Birthyear</mat-label>
+                <input matInput
+                       name="birthyear"
+                       placeholder="YYYY"
+                       [(ngModel)]="unicorn.birthyear"
+                       maxlength="4"
+                       minlength="4"
+                       required>
+                <mat-icon matSuffix>cake</mat-icon>
+                <mat-hint>{{ ('' + unicorn.birthyear).length }} / 4</mat-hint>
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-flat-button mat-dialog-close>Annuler</button>
+        <button mat-flat-button
+                color='primary'
+                type="submit"
+                [disabled]="unicornForm.invalid"
+                cdkFocusInitial>Enregistrer</button>
+    </div>
+</form>

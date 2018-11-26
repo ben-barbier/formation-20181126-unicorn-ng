@@ -1,0 +1,31 @@
+<mat-card>
+    <mat-card-header>
+        <img mat-card-avatar [src]="unicorn.photo">
+        <mat-card-title>{{ unicorn.name | magicalName }}</mat-card-title>
+        <mat-card-subtitle>ID: {{ unicorn.id }}</mat-card-subtitle>
+    </mat-card-header>
+    <img mat-card-image [src]="unicorn.photo">
+    <mat-card-content>
+        <p>Birthyear: {{ unicorn.birthyear }}</p>
+        <p>Weight: {{ unicorn.weight }}</p>
+        <div>
+            Capacities:
+            <ul>
+                <li *ngFor="let capacity of unicorn.capacitiesLabels">{{capacity}}</li>
+            </ul>
+        </div>
+        <div>
+            Hobbies:
+            <ul>
+                <li *ngFor="let hobby of unicorn.hobbies">{{hobby}}</li>
+            </ul>
+        </div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-mini-fab   color="primary" (click)="openEditForm()"><mat-icon>edit</mat-icon></button>
+        <button mat-mini-fab   color="primary" (click)="deleteUnicorn(unicorn)"><mat-icon>delete</mat-icon></button>
+        <button mat-mini-fab   color="primary" [routerLink]="['/unicorn', unicorn.id]"><mat-icon>visibility</mat-icon></button>
+        <button mat-mini-fab [color]="isInCart?'accent':'primary'" (click)="toggleToCart()"><mat-icon>favorite</mat-icon></button>
+        <button mat-mini-fab   color="primary" (click)="sayMyName()"><mat-icon>pan_tool</mat-icon></button>
+    </mat-card-actions>
+</mat-card>

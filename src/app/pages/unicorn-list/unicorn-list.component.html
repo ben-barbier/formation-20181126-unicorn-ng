@@ -1,0 +1,6 @@
+<uni-unicorn-card
+    *ngFor="let unicorn of unicorns"
+    (logName)="logName($event)"
+    (deleted)="removeUnicornFromList(unicorn)"
+    [unicorn]="unicorn">
+</uni-unicorn-card>
