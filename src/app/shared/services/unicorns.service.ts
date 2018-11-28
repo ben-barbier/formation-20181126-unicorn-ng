@@ -2,9 +2,12 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {from, Observable} from 'rxjs';
 import {Unicorn} from '../models/unicorn.model';
-import {filter, flatMap, map, mergeMap, pluck, reduce, shareReplay, toArray} from 'rxjs/operators';
+import {filter, flatMap, map, mergeMap, pluck, reduce, shareReplay, tap, toArray} from 'rxjs/operators';
 import {CapacitiesService} from './capacities.service';
 import {Capacity} from '../models/capacity.model';
+import {AppState} from '../../store/app.state';
+import {Store} from '@ngrx/store';
+import {DeleteUnicorn, UpdateUnicorn} from '../../store/actions/unicorns.actions';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +15,22 @@ import {Capacity} from '../models/capacity.model';
 export class UnicornsService {
 
     constructor(private http: HttpClient,
-                private capacitiesService: CapacitiesService) {
+                private capacitiesService: CapacitiesService,
+                private store: Store<AppState>) {
+    }
+
+    public static getAgeFromBirthyear(birthyear: number): number {
+        return new Date().getFullYear() - birthyear;
+    }
+
+    public static getMagicalName(name: string): string {
+        return '🦄' + Array.from(name).map((letter, idx) => {
+            return idx % 2 ? letter.toLowerCase() : letter.toUpperCase();
+        }).join('');
+    }
+
+    private static isOldEnough(unicorn: Unicorn, minAge: number) {
+        return new Date().getFullYear() - unicorn.birthyear >= minAge;
     }
 
     public list(): Observable<Unicorn[]> {
@@ -26,7 +44,9 @@ export class UnicornsService {
     public update(unicorn: Unicorn): Observable<Unicorn> {
         const unicornToSave = {...unicorn};
         delete unicornToSave.capacitiesLabels;
-        return this.http.put<Unicorn>(`http://localhost:3000/unicorns/${unicorn.id}`, unicornToSave);
+        return this.http.put<Unicorn>(`http://localhost:3000/unicorns/${unicorn.id}`, unicornToSave).pipe(
+            tap((unicornUpdated: Unicorn) => this.store.dispatch(new UpdateUnicorn(unicornUpdated))),
+        );
     }
 
     public listWithCapacities(): Observable<Unicorn[]> {
@@ -72,22 +92,10 @@ export class UnicornsService {
         );
     }
 
-    public static getAgeFromBirthyear(birthyear: number): number {
-        return new Date().getFullYear() - birthyear;
-    }
-
-    public static getMagicalName(name: string): string {
-        return Array.from(name).map((letter, idx) => {
-            return idx % 2 ? letter.toLowerCase() : letter.toUpperCase();
-        }).join('');
-    }
-
-    private static isOldEnough(unicorn: Unicorn, minAge: number) {
-        return new Date().getFullYear() - unicorn.birthyear >= minAge;
-    }
-
     public delete(unicorn: Unicorn): Observable<void> {
-        return this.http.delete<void>(`http://localhost:3000/unicorns/${unicorn.id}`);
+        return this.http.delete<void>(`http://localhost:3000/unicorns/${unicorn.id}`).pipe(
+            tap(() => this.store.dispatch(new DeleteUnicorn(unicorn)))
+        );
     }
 
 }

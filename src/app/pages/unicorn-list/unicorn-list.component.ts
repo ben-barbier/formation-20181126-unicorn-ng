@@ -1,6 +1,9 @@
 import {Component} from '@angular/core';
 import {UnicornsService} from '../../shared/services/unicorns.service';
 import {Unicorn} from '../../shared/models/unicorn.model';
+import {AppState} from '../../store/app.state';
+import {select, Store} from '@ngrx/store';
+import {Observable} from 'rxjs';
 
 @Component({
     selector: 'uni-unicorn-list',
@@ -9,20 +12,14 @@ import {Unicorn} from '../../shared/models/unicorn.model';
 })
 export class UnicornListComponent {
 
-    public unicorns: Unicorn[];
+    public unicorns: Observable<Unicorn[]> = this.store.pipe(select('unicorns'));
 
-    constructor(private unicornService: UnicornsService) {
-        this.unicornService.listWithCapacities().subscribe((unicorns: Unicorn[]) => {
-            this.unicorns = unicorns;
-        });
+    constructor(private unicornService: UnicornsService,
+                private store: Store<AppState>) {
     }
 
     public logName(name: string) {
         console.log(name);
     }
 
-    public removeUnicornFromList(unicornToDelete: Unicorn): void {
-        this.unicorns = this.unicorns.filter(
-            (unicorn: Unicorn) => unicornToDelete.id !== unicorn.id);
-    }
 }

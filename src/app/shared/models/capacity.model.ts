@@ -1,4 +1,4 @@
 export interface Capacity {
-    id: number,
-    label: string
+    id: number;
+    label: string;
 }

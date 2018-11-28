@@ -18,9 +18,6 @@ export class UnicornCardComponent {
     @Output()
     private logName = new EventEmitter<string>();
 
-    @Output()
-    private deleted = new EventEmitter();
-
     public isInCart = false;
 
     constructor(private unicornsService: UnicornsService,
@@ -33,7 +30,7 @@ export class UnicornCardComponent {
     }
 
     public deleteUnicorn(unicorn: Unicorn) {
-        this.unicornsService.delete(unicorn).subscribe(() => this.deleted.emit());
+        this.unicornsService.delete(unicorn).subscribe();
     }
 
     public toggleToCart() {

@@ -2,8 +2,11 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The listWithMagicalName of file replacements can be found in `angular.json`.
 
+import {NgModule} from '@angular/core';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+
 export const environment = {
-  production: false
+    production: false
 };
 
 /*
@@ -13,4 +16,13 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
+
 // import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+
+@NgModule({
+    imports: [StoreDevtoolsModule.instrument({
+        maxAge: 10
+    })],
+})
+export class DevModule {
+}
